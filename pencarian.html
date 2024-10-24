@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pencarian Film</title>
+  <style>
+    /* Tampilan dasar halaman */
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #000; /* Hitam pekat */
+  color: white;
+  font-family: 'Arial', sans-serif;
+}
+
+/* Container input pencarian */
+.search-container {
+  text-align: center;
+  margin: 20px;
+}
+
+#searchInput {
+  width: 80%;
+  padding: 10px;
+  font-size: 20px;
+  border: none;
+  border-radius: 10px;
+  outline: none;
+}
+
+/* Container hasil pencarian */
+.result-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.film-card {
+  width: 80%;
+  background-color: #1a1a1a;
+  margin: 10px 0;
+  padding: 15px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  transition: transform 0.3s;
+}
+
+.film-card:hover {
+  transform: scale(1.05);
+}
+
+.film-card img {
+  width: 80px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 10px;
+  margin-right: 15px;
+}
+
+.film-title {
+  font-size: 24px;
+  font-weight: bold;
+}
+    
+  </style>
+</head>
+<body>
+  <div class="search-container">
+    <input type="text" id="searchInput" placeholder="Cari film..." autofocus>
+  </div>
+  <div class="result-container" id="resultContainer">
+    <!-- Hasil pencarian akan muncul di sini -->
+  </div>
+
+  <script>document.addEventListener('DOMContentLoaded', () => {
+  const searchInput = document.getElementById('searchInput');
+  const resultContainer = document.getElementById('resultContainer');
+
+  // Ambil data film dari film.html
+  fetch('film.html')
+    .then(response => response.text())
+    .then(data => {
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(data, 'text/html');
+      const films = doc.querySelectorAll('.film');
+      const filmList = Array.from(films).map(film => ({
+        title: film.getAttribute('data-title'),
+        image: film.getAttribute('data-image'),
+      }));
+
+      // Fungsi untuk mencari film berdasarkan input
+      searchInput.addEventListener('input', () => {
+        const query = searchInput.value.toLowerCase();
+        resultContainer.innerHTML = '';
+
+        if (query === '') return; // Hapus hasil jika input kosong
+
+        const filteredFilms = filmList.filter(film =>
+          film.title.toLowerCase().includes(query)
+        );
+
+        // Tampilkan hasil pencarian
+        filteredFilms.forEach(film => {
+          const filmCard = document.createElement('div');
+          filmCard.className = 'film-card';
+
+          filmCard.innerHTML = `
+            <img src="${film.image}" alt="${film.title}">
+            <div class="film-title">${film.title}</div>
+          `;
+
+          resultContainer.appendChild(filmCard);
+        });
+      });
+    })
+    .catch(error => console.error('Gagal mengambil data film:', error));
+});</script>
+</body>
+</html>

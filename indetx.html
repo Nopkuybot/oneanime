@@ -1,0 +1,685 @@
+<html lang="en">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>
+   Anime App
+  </title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+  <style>
+   body {
+            margin: 0;
+            font-family: 'Roboto', sans-serif;
+            background-color: black;
+            color: #fff;
+            padding-bottom: 60px; /* Add padding to the bottom to make space for the fixed bottom navigation */
+        }
+        .header {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            background-color: black;
+        }
+        .header img {
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            margin-right: 10px;
+        }
+        .header .user-info {
+            flex-grow: 1;
+        }
+        .header .user-info p {
+            margin: 0;
+        }
+        .header .user-info .rank {
+            display: flex;
+            align-items: center;
+        }
+        .header .user-info .rank span {
+            margin-left: 5px;
+            background-color: #3a3a3c;
+            padding: 2px 5px;
+            border-radius: 5px;
+        }
+        .header .icons {
+            display: flex;
+            align-items: center;
+        }
+        .header .icons i {
+            margin-left: 15px;
+            font-size: 20px;
+        }
+        .notification {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #2b2b2b; /* Warna gelap */
+  color: #b3d9ff; /* Biru muda */
+  padding: 30px 40px;
+  border-radius: 20px;
+  text-align: center;
+  z-index: 1000;
+  box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.4);
+  font-size: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  width: 350px;
+  max-width: 90%;
+}
+
+.notification h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.notification p {
+  margin: 0;
+  font-size: 1.1rem;
+  word-wrap: break-word;
+}
+
+.notification .close-btn {
+  background-color: #007acc; /* Biru gelap */
+  color: white;
+  border: none;
+  padding: 12px 15px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 1.2rem;
+  width: 100%;
+  max-width: 200px;
+}
+
+.notification .close-btn:hover {
+  background-color: #005f99;
+}
+
+.hidden {
+  display: none;
+}
+        .feature-banner {
+            background-color: #3a3a3c;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 10px;
+            border-radius: 10px;
+        }
+        .feature-banner button {
+            background-color: #00aaff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            color: #fff;
+            cursor: pointer;
+        }
+        .last-watched {
+            background-color: #3a3a3c;
+            padding: 10px;
+            margin: 10px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+        }
+        .last-watched img {
+            width: 80px;
+            height: 80px;
+            border-radius: 10px;
+            margin-right: 10px;
+        }
+        .last-watched .info {
+            flex-grow: 1;
+        }
+        .last-watched .info p {
+            margin: 0;
+        }
+        .last-watched .info .episode {
+            display: flex;
+            align-items: center;
+        }
+        .last-watched .info .episode i {
+            margin-right: 5px;
+        }
+        .section-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            margin: 10px;
+        }
+        .section-title h2 {
+            margin: 0;
+        }
+        .section-title a {
+            color: #4a90e2;
+            text-decoration: none;
+        }
+        .anime-list {
+            display: flex;
+            overflow-x: scroll;
+            padding: 10px;
+        }
+        .anime-list .anime-item {
+            margin-right: 10px;
+            text-align: center;
+        }
+        .anime-list .anime-item img {
+            width: 120px;
+            height: 180px;
+            border-radius: 10px;
+        }
+        .anime-list .anime-item p {
+            margin: 5px 0 0 0;
+        }
+        .vip-section {
+            background-color: #3a3a3c;
+            padding: 10px;
+            margin: 10px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        .vip-section button {
+            background-color: #00aaff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            color: #fff;
+            cursor: pointer;
+        }
+        .genre-section {
+            padding: 10px;
+            margin: 10px;
+        }
+        .genre-section .genre-list {
+            display: flex;
+            flex-wrap: wrap;
+        }
+        .genre-section .genre-list button {
+            background-color: #3a3a3c;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            color: #fff;
+            margin: 5px;
+            cursor: pointer;
+        }
+        .footer-buttons {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            margin: 10px;
+        }
+        .footer-buttons button {
+            background-color: #3a3a3c;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            color: #fff;
+            cursor: pointer;
+        }
+            .anime-movie-list {
+    display: flex;
+    flex-wrap: wrap; /* Agar elemen bisa pindah ke baris berikutnya */
+    padding: 10px;
+    justify-content: space-between; /* Menjaga jarak antara elemen agar lebih seimbang */
+}
+
+.anime-movie-list .anime-item {
+    width: calc(33.33% - 15px); /* Lebar setiap item 1/3 dari lebar container, dikurangi margin */
+    margin-bottom: 15px; /* Jarak antara baris */
+    text-align: center;
+    position: relative;
+}
+
+.anime-movie-list .anime-item img {
+    width: 140px; /* Ukuran gambar diperbesar */
+    height: 210px; /* Ukuran gambar diperbesar */
+    border-radius: 10px;
+}
+
+.anime-movie-list .anime-item p {
+    margin: 5px 0 0 0;
+}
+
+.rating {
+    position: absolute;
+    top: -1px;
+    right: -9px;
+    background-color: rgba(17,17,17,0.7);
+    border-radius: 5px;
+    padding: 5px 5px;
+}
+
+.episodes {
+    position: absolute;
+    bottom: 35px; /* Menyesuaikan posisi ke atas dari bawah gambar */
+    left: -1px; 
+    background-color: rgba(17,17,17,0.7);
+    border-radius: 5px;
+    padding: 5px 5px;
+    font-weight: bold;
+}
+        .bottom-nav {
+            display: flex;
+            justify-content: space-around;
+            background-color: #2c2c2e;
+            padding: 10px 0;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+        .bottom-nav i {
+            font-size: 24px;
+        }
+  </style>
+ </head>
+ <body>
+  <div class="header">
+   <img alt="User profile picture" height="50" src="https://storage.googleapis.com/a1aa/image/ryvsbYQjVkY9FBCDOfGZLKbEahbi2IfN5h17ke5DQVH2d0RnA.jpg" width="50"/>
+   <div class="user-info">
+    <p>
+     Selamat Siang
+    </p>
+    <p>
+     Ajib Sasena2
+    </p>
+    <div class="rank">
+     <span>
+      Lv1
+     </span>
+     <span>
+      F-Rank
+     </span>
+    </div>
+   </div>
+   <div class="icons">
+<i class="fas fa-bell" onclick="window.location.href='notifikasi.html'"></i>
+    <i class="fas fa-search" onclick="window.location.href='pencarian.html'"></i>
+   </div>
+  </div>
+    <div id="notificationArea"></div>
+  <div class="feature-banner">
+   <p>
+    Yuk Cobain Fitur Nonton Bareng!
+   </p>
+   <button>
+    Coba
+   </button>
+  </div>
+  <div class="last-watched">
+   <img alt="Last watched anime thumbnail" height="80" src="https://storage.googleapis.com/a1aa/image/Z5J0EflQpEwVUatduBg1LMwmDZSOs74N8GHMnBgq9LEeO6oTA.jpg" width="80"/>
+   <div class="info">
+    <p>
+     Terakhir Ditonton
+    </p>
+    <p>
+     Maou Gakuin no Futekigousha Season 2 Part 2
+    </p>
+    <div class="episode">
+     <i class="fas fa-play-circle">
+     </i>
+     <span>
+      Episode 11
+     </span>
+    </div>
+   </div>
+  </div>
+  <div class="section-title">
+   <h2>
+    Ongoing Anime
+   </h2>
+   <a href="kalender.html">
+    Lihat Jadwal
+   </a>
+  </div>
+  <div class="anime-list">
+   <div class="anime-item">
+    <img alt="Touhai: Ura Rate Mahjong Touhai Roku" height="180" src="https://storage.googleapis.com/a1aa/image/q9TVtTDAdfyRVKXd9Alph0gHCOMQy8p5pQeT4sTzYsCfd0RnA.jpg" width="120"/>
+    <p>
+     Ep 2
+    </p>
+    <p>
+     Touhai: Ura Rate Mahjong Touhai Roku
+    </p>
+   </div>
+   <div class="anime-item">
+    <img alt="Acro Trip" height="180" src="https://storage.googleapis.com/a1aa/image/fZf0DeedoZzCaQIVMBr77PfhTapRUoxwQ3RxH7aXC2LL3RHdC.jpg" width="120"/>
+    <p>
+     Ep 4
+    </p>
+    <p>
+     Acro Trip
+    </p>
+   </div>
+   <div class="anime-item">
+    <img alt="Sengoku Youko: Senma Konton-hen" height="180" src="https://storage.googleapis.com/a1aa/image/pKY8z6tcDD5LJZGQONFtmNL7M7kcBtqfeKUbiGzsYK5ed0RnA.jpg" width="120"/>
+    <p>
+     Ep 12
+    </p>
+    <p>
+     Sengoku Youko: Senma Konton-hen
+    </p>
+   </div>
+   <div class="anime-item">
+    <img alt="Attack on Titan" height="180" src="https://storage.googleapis.com/a1aa/image/fIqoJYtfGwn4NEAwGVODo0wu8rRs9USdgKdwawd3eUhNi0RnA.jpg" width="120"/>
+    <p>
+     Ep 75
+    </p>
+    <p>
+     Attack on Titan
+    </p>
+   </div>
+   <div class="anime-item">
+    <img alt="My Hero Academia" height="180" src="https://storage.googleapis.com/a1aa/image/W1mddqnjGZ5QN1DqTvlVS1l3lyH0grzy9GK13oDMQHaPkO6E.jpg" width="120"/>
+    <p>
+     Ep 88
+    </p>
+    <p>
+     My Hero Academia
+    </p>
+   </div>
+   <div class="anime-item">
+    <img alt="Jujutsu Kaisen" height="180" src="https://storage.googleapis.com/a1aa/image/xvJ9cftsPxWWbiAGLDOS319mpHfaAOSqOOposi9K2dCJR6oTA.jpg" width="120"/>
+    <p>
+     Ep 24
+    </p>
+    <p>
+     Jujutsu Kaisen
+    </p>
+   </div>
+   <div class="anime-item">
+    <img alt="Demon Slayer" height="180" src="https://storage.googleapis.com/a1aa/image/wnIgYarLBJZgOF0fYjvZsNA403icDFbw7wMcJvNQzYVeQ6oTA.jpg" width="120"/>
+    <p>
+     Ep 26
+    </p>
+    <p>
+     Demon Slayer
+    </p>
+   </div>
+   <div class="anime-item">
+    <img alt="One Piece" height="180" src="https://storage.googleapis.com/a1aa/image/BqDLMXaeefDBVpcRC4gk73KwGa3waiHjJdXZyfn0FLaYDpjOB.jpg" width="120"/>
+    <p>
+     Ep 1000
+    </p>
+    <p>
+     One Piece
+    </p>
+   </div>
+   <div class="anime-item">
+    <img alt="Naruto Shippuden" height="180" src="https://storage.googleapis.com/a1aa/image/lp0IsKYkHE5XKVv2pTPIcbKfyxJAUSphIBhoUXVRIXxfQ6oTA.jpg" width="120"/>
+    <p>
+     Ep 500
+    </p>
+    <p>
+     Naruto Shippuden
+    </p>
+   </div>
+   <div class="anime-item">
+    <img alt="Black Clover" height="180" src="https://storage.googleapis.com/a1aa/image/8poPUT7nT8avKhIxOSFKgCY3fyqky5gCd8oywHxV8yClId0JA.jpg" width="120"/>
+    <p>
+     Ep 170
+    </p>
+    <p>
+     Black Clover
+    </p>
+   </div>
+   <div class="anime-item">
+    <img alt="Sword Art Online" height="180" src="https://storage.googleapis.com/a1aa/image/1KFd84wfRJU5aqh0hXuOmLBCjC1nYpUNmL1UEL9uoLzjId0JA.jpg" width="120"/>
+    <p>
+     Ep 96
+    </p>
+    <p>
+     Sword Art Online
+    </p>
+   </div>
+   <div class="anime-item">
+    <img alt="Tokyo Ghoul" height="180" src="https://storage.googleapis.com/a1aa/image/ebvsRfsqmkllukfoY1rqEXtEQe3F7rRtfRF6N4amJ8SnJSHdC.jpg" width="120"/>
+    <p>
+     Ep 48
+    </p>
+    <p>
+     Tokyo Ghoul
+    </p>
+   </div>
+   <div class="anime-item">
+    <img alt="Fairy Tail" height="180" src="https://storage.googleapis.com/a1aa/image/DiBDdINfAn04UyENpRDkn9BqaEqUrHRJAieiia4taeZkh0RnA.jpg" width="120"/>
+    <p>
+     Ep 328
+    </p>
+    <p>
+     Fairy Tail
+    </p>
+   </div>
+  </div>
+  <div class="vip-section">
+   <button>
+    VIP
+   </button>
+   <p>
+    Ingin mendapat fitur bagus lebih banyak? yuk langganan VIP
+   </p>
+  </div>
+  <div class="genre-section">
+   <h2>
+    Genre Pilihan
+   </h2>
+   <div class="genre-list">
+    <button>
+     Action
+    </button>
+    <button>
+     Adventure
+    </button>
+    <button>
+     Comedy
+    </button>
+    <button>
+     Demons
+    </button>
+    <button>
+     Drama
+    </button>
+    <button>
+     Ecchi
+    </button>
+   </div>
+  </div>
+  <div class="footer-buttons">
+   <button>
+    Donasi
+   </button>
+   <button>
+    Instagram
+   </button>
+  </div>
+  <div class="anime-movie-section">
+   <h2>
+    Anime Movie
+   </h2>
+   <div class="anime-movie-list">
+ <div class="anime-movie-list" id="animeList"></div>
+ 
+ 
+  <div class="bottom-nav">
+   
+<i class="fas fa-home" onclick="goToHome()" style="cursor: pointer;"></i>
+
+<script>
+  function goToHome() {
+    window.location.href = "index.html";
+  }
+</script>
+   
+   
+   
+<i class="fas fa-calendar-alt" onclick="goToCalendar()" style="cursor: pointer;"></i>
+
+<script>
+  function goToCalendar() {
+    window.location.href = "kalender.html";
+  }
+</script>
+
+
+
+<i class="fas fa-book" onclick="goToSubscribe()" style="cursor: pointer;"></i>
+
+<script>
+  function goToSubscribe() {
+    window.location.href = "subscribe.html";
+  }
+</script>
+
+      <i class="fas fa-bell" onclick="goToNotification()" style="cursor: pointer;"></i>
+
+<script>
+  function goToNotification() {
+    window.location.href = "notifikasi.html";
+  }
+</script>
+   
+   
+   
+<i class="fas fa-user" onclick="goToSetting()" style="cursor: pointer;"></i>
+
+<script>
+  function goToSetting() {
+    window.location.href = "setting.html";
+  }
+</script>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-app.js";
+    import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyALE-ek0P4_dEKioxPAdNeEVkXkZq-teEY",
+      authDomain: "oneanime-cc892.firebaseapp.com",
+      databaseURL: "https://oneanime-cc892-default-rtdb.firebaseio.com",
+      projectId: "oneanime-cc892",
+      storageBucket: "oneanime-cc892.appspot.com",
+      messagingSenderId: "238220128240",
+      appId: "1:238220128240:web:a6e9f02911cede575d7735",
+      measurementId: "G-LZ2MRJHLRG"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+    const animeListRef = ref(db, 'anime/');
+
+    onValue(animeListRef, (snapshot) => {
+      const animeList = document.getElementById('animeList');
+      animeList.innerHTML = ''; // Kosongkan daftar sebelum menambahkan
+
+      snapshot.forEach(childSnapshot => {
+        const anime = childSnapshot.val();
+        const animeItem = document.createElement('div');
+        animeItem.className = 'anime-item';
+
+        // Buat elemen gambar dan set link
+        const img = document.createElement('img');
+        img.src = anime.thumbnail;
+        img.alt = anime.title;
+        img.onclick = () => window.location.href = anime.link; // Arahkan ke halaman yang ditentukan
+
+        // Buat elemen rating
+        const rating = document.createElement('div');
+        rating.className = 'rating';
+        rating.textContent = `⭐ ${anime.rating}`;
+
+        // Buat elemen episodes
+        const episodes = document.createElement('div');
+        episodes.className = 'episodes';
+        episodes.textContent = `Eps: ${anime.episodes}`;
+
+        // Buat elemen judul
+        const title = document.createElement('p');
+        title.textContent = anime.title;
+
+        // Gabungkan elemen
+        animeItem.appendChild(img);
+        animeItem.appendChild(rating);
+        animeItem.appendChild(episodes);
+        animeItem.appendChild(title);
+        animeList.appendChild(animeItem);
+      });
+    });
+  </script>
+    <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-app.js";
+    import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyALE-ek0P4_dEKioxPAdNeEVkXkZq-teEY",
+      authDomain: "oneanime-cc892.firebaseapp.com",
+      databaseURL: "https://oneanime-cc892-default-rtdb.firebaseio.com",
+      projectId: "oneanime-cc892",
+      storageBucket: "oneanime-cc892.appspot.com",
+      messagingSenderId: "238220128240",
+      appId: "1:238220128240:web:a6e9f02911cede575d7735",
+      measurementId: "G-LZ2MRJHLRG"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    // Fungsi untuk mengecek apakah notifikasi sudah ditutup sebelumnya
+    function isNotificationDismissed(notificationId) {
+      return localStorage.getItem(`dismissed_${notificationId}`) === 'true';
+    }
+
+    // Fungsi untuk menandai notifikasi sebagai sudah ditutup
+    function dismissNotification(notificationId) {
+      localStorage.setItem(`dismissed_${notificationId}`, 'true');
+    }
+
+    // Ambil notifikasi dari Firebase
+    const notificationsRef = ref(db, 'notifications');
+    onValue(notificationsRef, (snapshot) => {
+      const notificationArea = document.getElementById('notificationArea');
+      notificationArea.innerHTML = ''; // Bersihkan area notifikasi sebelumnya
+
+      snapshot.forEach((childSnapshot) => {
+        const notification = childSnapshot.val();
+        const notificationId = childSnapshot.key;
+
+        // Tampilkan hanya jika notifikasi belum ditutup
+        if (!isNotificationDismissed(notificationId)) {
+          showNotification(notification, notificationArea, notificationId);
+        }
+      });
+    });
+
+    function showNotification(notification, area, notificationId) {
+      const notificationDiv = createNotificationElement(notification, notificationId);
+      area.appendChild(notificationDiv);
+    }
+
+    function createNotificationElement(notification, notificationId) {
+      const notificationDiv = document.createElement('div');
+      notificationDiv.className = 'notification';
+      notificationDiv.innerHTML = `
+        <strong>${notification.sender}</strong>
+        <div class="message">${notification.message}</div>
+        <button class="close-btn">Tutup</button>
+      `;
+
+      const closeButton = notificationDiv.querySelector('.close-btn');
+      closeButton.addEventListener('click', () => {
+        notificationDiv.remove();
+        dismissNotification(notificationId); // Tandai notifikasi sebagai sudah ditutup
+      });
+
+      return notificationDiv;
+    }
+  </script>
+  </div>
+ </body>
+</html>

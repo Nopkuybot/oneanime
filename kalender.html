@@ -1,0 +1,254 @@
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>Jadwal Tayang</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet"/>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Roboto', sans-serif;
+      background-color: #121212;
+      color: #ffffff;
+    }
+
+    .container {
+      padding: 20px;
+    }
+
+    .section-title {
+      font-size: 24px;
+      font-weight: bold;
+      margin: 20px 0 10px;
+    }
+
+    .anime-list {
+      display: flex;
+      overflow-x: auto;
+      gap: 20px;
+      padding-bottom: 10px;
+    }
+
+    .anime-item {
+      background-color: #1e1e1e;
+      border-radius: 10px;
+      overflow: hidden;
+      width: 200px;
+      flex: 0 0 auto;
+    }
+
+    .anime-item img {
+      width: 100%;
+      height: 120px; /* Sesuaikan tinggi untuk poster */
+      object-fit: cover;
+    }
+
+    .anime-info {
+      padding: 10px;
+    }
+
+    .anime-info h3 {
+      font-size: 16px;
+      margin: 0;
+      color: #ffffff;
+    }
+
+    .anime-info p {
+      font-size: 14px;
+      margin: 5px 0;
+      color: #ffffff;
+    }
+
+    .day-section h2 {
+      font-size: 20px;
+      font-weight: bold;
+      color: #00aaff;
+      margin-bottom: 10px;
+    }
+
+    .bottom-nav {
+      display: flex;
+      justify-content: space-around;
+      background-color: #2c2c2e;
+      padding: 10px 0;
+      position: fixed;
+      bottom: 0;
+      width: 100vw;
+      left: 0;
+      margin: 0;
+    }
+
+    .bottom-nav i {
+      font-size: 24px;
+      color: white;
+    }
+
+    h1 {
+      font-size: 28px;
+      font-weight: bold;
+      margin: 20px 0;
+      color: white;
+      text-decoration: none;  /* Pastikan tidak ada garis bawah */
+      outline: none;  /* Hilangkan outline jika ada */
+    }
+
+    a {
+      text-decoration: none; /* Hilangkan garis bawah dari elemen link */
+      color: inherit;  /* Agar warna link mengikuti teks */
+    }
+
+    a:focus, a:active {
+      outline: none; /* Pastikan tidak ada garis saat di klik atau fokus */
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Jadwal Tayang</h1>
+    <div id="animeSchedule"></div>
+
+    <div class="bottom-nav">
+      <i class="fas fa-home" onclick="goToHome()" style="cursor: pointer;"></i>
+      <i class="fas fa-calendar-alt" onclick="goToCalendar()" style="cursor: pointer;"></i>
+      <i class="fas fa-book" onclick="goToSubscribe()" style="cursor: pointer;"></i>
+      <i class="fas fa-bell" onclick="goToNotification()" style="cursor: pointer;"></i>
+      <i class="fas fa-user" onclick="goToSetting()" style="cursor: pointer;"></i>
+    </div>
+  </div>
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-app.js";
+  import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-database.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyALE-ek0P4_dEKioxPAdNeEVkXkZq-teEY",
+    authDomain: "oneanime-cc892.firebaseapp.com",
+    databaseURL: "https://oneanime-cc892-default-rtdb.firebaseio.com",
+    projectId: "oneanime-cc892",
+    storageBucket: "oneanime-cc892.appspot.com",
+    messagingSenderId: "238220128240",
+    appId: "1:238220128240:web:a6e9f02911cede575d7735",
+    measurementId: "G-LZ2MRJHLRG"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
+  const animeRef = ref(db, 'anime/');
+  const animeSchedule = document.getElementById('animeSchedule');
+
+  onValue(animeRef, (snapshot) => {
+    const daysData = {};
+    const today = new Date().toLocaleDateString('id-ID', { weekday: 'long' });
+
+    snapshot.forEach((childSnapshot) => {
+      const data = childSnapshot.val();
+      const day = data.day;
+
+      if (!daysData[day]) {
+        daysData[day] = [];
+      }
+      daysData[day].push(data);
+    });
+
+    animeSchedule.innerHTML = ''; // Kosongkan konten sebelumnya
+
+    for (const day in daysData) {
+      const daySection = document.createElement('div');
+      daySection.className = 'day-section';
+
+      // Gambar latar belakang untuk jadwal tayang
+      daySection.style.backgroundImage = "url('path_to_your_background_image.jpg')"; // Ganti dengan URL gambar latar belakang
+      daySection.style.backgroundSize = 'cover';
+      daySection.style.padding = '10px';
+      daySection.style.borderRadius = '8px';
+      daySection.style.marginBottom = '15px';
+
+      // Periksa apakah hari ini
+      const isToday = day.toLowerCase() === today.toLowerCase();
+
+      // Elemen judul hari
+      const dayTitle = document.createElement('h2');
+      dayTitle.style.color = 'white';  // Warna putih
+      dayTitle.innerText = `${day.charAt(0).toUpperCase() + day.slice(1)}${isToday ? ' (Hari ini)' : ''}`; // Huruf depan besar
+
+      // Elemen jumlah anime
+      const animeCount = document.createElement('span');
+      animeCount.style.color = '#00BFFF';  // Warna biru muda
+      animeCount.style.fontSize = 'small';  // Huruf kecil
+      animeCount.style.marginLeft = '10px';  // Jarak antara hari dan jumlah anime
+      animeCount.innerText = `${daysData[day].length} anime`;
+
+      dayTitle.appendChild(animeCount);
+      daySection.appendChild(dayTitle);
+
+      // Tambahkan anime ke dalam hari tersebut
+      daysData[day].forEach((anime) => {
+        const animeItem = document.createElement('div');
+        animeItem.className = 'anime-item';
+        animeItem.innerHTML = `
+          <a href="${anime.link}">
+            <img src="${anime.poster}" alt="${anime.title}" class="anime-poster"> <!-- Ganti thumbnail menjadi poster -->
+            <div class="anime-info">
+              <h3>${anime.title}</h3>
+              <p>Episode: ${anime.episodes}</p>
+              <p>Rating: ${anime.rating}</p>
+              <p>Durasi: ${anime.duration}</p>
+            </div>
+          </a>
+        `;
+        daySection.appendChild(animeItem);
+      });
+
+      animeSchedule.appendChild(daySection);
+    }
+  });
+</script>
+    <div class="bottom-nav">
+   
+<i class="fas fa-home" onclick="goToHome()" style="cursor: pointer;"></i>
+
+<script>
+  function goToHome() {
+    window.location.href = "index.html";
+  }
+</script>
+   
+   
+   
+<i class="fas fa-calendar-alt" onclick="goToCalendar()" style="cursor: pointer;"></i>
+
+<script>
+  function goToCalendar() {
+    window.location.href = "kalender.html";
+  }
+</script>
+
+
+
+<i class="fas fa-book" onclick="goToSubscribe()" style="cursor: pointer;"></i>
+
+<script>
+  function goToSubscribe() {
+    window.location.href = "subscribe.html";
+  }
+</script>
+
+      <i class="fas fa-bell" onclick="goToNotification()" style="cursor: pointer;"></i>
+
+<script>
+  function goToNotification() {
+    window.location.href = "notifikasi.html";
+  }
+</script>
+   
+   
+   
+<i class="fas fa-user" onclick="goToSetting()" style="cursor: pointer;"></i>
+
+<script>
+  function goToSetting() {
+    window.location.href = "setting.html";
+  }
+</script>
+</body>
+</html>
